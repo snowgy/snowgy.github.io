@@ -87,12 +87,12 @@
 <meta property="og:site_name" content="Super Yue">
 <meta property="og:description" content="ADM: Modeling Semistructed Data in AsterixDBDataverses, Datatypes, and Datasetsdatabase a place to create and manage the types, datasets, functions and other artifacts. datatype tells AsterixDB what y">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2019/06/19/images/arch.jpg">
-<meta property="og:updated_time" content="2019-06-21T10:46:23.774Z">
+<meta property="og:image" content="http://yoursite.com/images/arch.jpg">
+<meta property="og:updated_time" content="2019-06-21T10:49:48.762Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Learn AsterixDB">
 <meta name="twitter:description" content="ADM: Modeling Semistructed Data in AsterixDBDataverses, Datatypes, and Datasetsdatabase a place to create and manage the types, datasets, functions and other artifacts. datatype tells AsterixDB what y">
-<meta name="twitter:image" content="http://yoursite.com/2019/06/19/images/arch.jpg">
+<meta name="twitter:image" content="http://yoursite.com/images/arch.jpg">
 
 
 
@@ -372,7 +372,7 @@
 <p>Sql++ supports a SELECT VALUE which returns an entire object instead of a single value.</p>
 <h2 id="Loading-Data-Into-AsterixDB"><a href="#Loading-Data-Into-AsterixDB" class="headerlink" title="Loading Data Into AsterixDB"></a>Loading Data Into AsterixDB</h2><p>Using JSON format  data</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">USE</span> TinySocial;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> ChirpUsers</span><br><span class="line">([</span><br><span class="line">    &#123;<span class="string">"screenName"</span>:<span class="string">"NathanGiesen@211"</span>,<span class="string">"lang"</span>:<span class="string">"en"</span>,<span class="string">"friendsCount"</span>:<span class="number">18</span>,<span class="string">"statusesCount"</span>:<span class="number">473</span>,<span class="string">"name"</span>:<span class="string">"Nathan Giesen"</span>,<span class="string">"followersCount"</span>:<span class="number">49416</span>&#125;,</span><br><span class="line">    &#123;<span class="string">"screenName"</span>:<span class="string">"ColineGeyer@63"</span>,<span class="string">"lang"</span>:<span class="string">"en"</span>,<span class="string">"friendsCount"</span>:<span class="number">121</span>,<span class="string">"statusesCount"</span>:<span class="number">362</span>,<span class="string">"name"</span>:<span class="string">"Coline Geyer"</span>,<span class="string">"followersCount"</span>:<span class="number">17159</span>&#125;,</span><br><span class="line">    &#123;<span class="string">"screenName"</span>:<span class="string">"NilaMilliron_tw"</span>,<span class="string">"lang"</span>:<span class="string">"en"</span>,<span class="string">"friendsCount"</span>:<span class="number">445</span>,<span class="string">"statusesCount"</span>:<span class="number">164</span>,<span class="string">"name"</span>:<span class="string">"Nila Milliron"</span>,<span class="string">"followersCount"</span>:<span class="number">22649</span>&#125;,</span><br><span class="line">    &#123;<span class="string">"screenName"</span>:<span class="string">"ChangEwing_573"</span>,<span class="string">"lang"</span>:<span class="string">"en"</span>,<span class="string">"friendsCount"</span>:<span class="number">182</span>,<span class="string">"statusesCount"</span>:<span class="number">394</span>,<span class="string">"name"</span>:<span class="string">"Chang Ewing"</span>,<span class="string">"followersCount"</span>:<span class="number">32136</span>&#125;</span><br><span class="line"> ]);</span><br></pre></td></tr></table></figure>
-<h2 id="Architecture"><a href="#Architecture" class="headerlink" title="Architecture"></a>Architecture</h2><p><img src="../images/arch.jpg" width="700"></p>
+<h2 id="Architecture"><a href="#Architecture" class="headerlink" title="Architecture"></a>Architecture</h2><p><img src="/images/arch.jpg" width="700"></p>
 <h3 id="Hyracks"><a href="#Hyracks" class="headerlink" title="Hyracks"></a>Hyracks</h3><p>Hyracks is the runtime layer (executor) whose responsibility is to accept and manage data-parallel computations </p>
 <p>Jobs are submitted to Hyracks in the form of DAGs made up of <code>Operators</code> and <code>Connectors</code>. </p>
 <p><code>Operators</code> consuming partitions of their inputs and producing output partitions.</p>

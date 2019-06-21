@@ -87,10 +87,14 @@
 <meta property="og:site_name" content="Super Yue">
 <meta property="og:description" content="MotivationOpen fields bring storage overhead which will affect the query efficiency.  Having an automated mechanism to infer and consolidate the schema information for the ingested records without los">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-06-20T12:49:10.620Z">
+<meta property="og:image" content="http://yoursite.com/2019/06/19/images/structure.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/06/19/images/example.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/06/19/images/schema.jpg">
+<meta property="og:updated_time" content="2019-06-21T10:44:29.863Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Note: Schema for the schemaless">
 <meta name="twitter:description" content="MotivationOpen fields bring storage overhead which will affect the query efficiency.  Having an automated mechanism to infer and consolidate the schema information for the ingested records without los">
+<meta name="twitter:image" content="http://yoursite.com/2019/06/19/images/structure.jpg">
 
 
 
@@ -387,12 +391,15 @@
 <p>Bigger data blocks, bigger I/O cost</p>
 </li>
 </ol>
-<h2 id="Apache-AsterixDB-Architecture"><a href="#Apache-AsterixDB-Architecture" class="headerlink" title="Apache AsterixDB Architecture"></a>Apache AsterixDB Architecture</h2><h2 id="LSM-Based-Schema-Inference-And-Tuple-Compaction-Framework"><a href="#LSM-Based-Schema-Inference-And-Tuple-Compaction-Framework" class="headerlink" title="LSM-Based Schema Inference And Tuple Compaction Framework"></a>LSM-Based Schema Inference And Tuple Compaction Framework</h2><p><code>Main idea</code> factor out the fields’ metadata from their values for each record and construct the overall schema during the LSM-flush operation.</p>
+<h2 id="Apache-AsterixDB-Architecture"><a href="#Apache-AsterixDB-Architecture" class="headerlink" title="Apache AsterixDB Architecture"></a>Apache AsterixDB Architecture</h2><p><img src="../images/structure.jpg" width="700"></p>
+<h2 id="LSM-Based-Schema-Inference-And-Tuple-Compaction-Framework"><a href="#LSM-Based-Schema-Inference-And-Tuple-Compaction-Framework" class="headerlink" title="LSM-Based Schema Inference And Tuple Compaction Framework"></a>LSM-Based Schema Inference And Tuple Compaction Framework</h2><p><code>Main idea</code> factor out the fields’ metadata from their values for each record and construct the overall schema during the LSM-flush operation.</p>
 <p><code>Tuple Compactor</code> the module that infers the schema and compacts the record</p>
-<h3 id="Framework-Overview"><a href="#Framework-Overview" class="headerlink" title="Framework Overview"></a>Framework Overview</h3><p>The newly inferred schema is a super-set(or union) of all the previously inferred schemas. </p>
+<h3 id="Framework-Overview"><a href="#Framework-Overview" class="headerlink" title="Framework Overview"></a>Framework Overview</h3><p><img src="../images/example.jpg" width="700"></p>
+<p>The newly inferred schema is a super-set(or union) of all the previously inferred schemas. </p>
 <p>Given this property, we only need to store the most recent schema of all the mergeable components as it covers the fields of all the previously flushed components.</p>
 <p><code>pros</code> the merge operation does not need to  block the modifications on the in-memory schema while flushing the in-memory </p>
-<h3 id="Schema-Structure"><a href="#Schema-Structure" class="headerlink" title="Schema Structure"></a>Schema Structure</h3><p>The schema stucture describes the tree structure of the ingester JSON-like records, where the inner nodes of the tree structure of the </p>
+<h3 id="Schema-Structure"><a href="#Schema-Structure" class="headerlink" title="Schema Structure"></a>Schema Structure</h3><p><img src="../images/schema.jpg" width="700"></p>
+<p>The schema stucture describes the tree structure of the ingester JSON-like records, where the inner nodes of the tree structure of the </p>
 
       
     </div>

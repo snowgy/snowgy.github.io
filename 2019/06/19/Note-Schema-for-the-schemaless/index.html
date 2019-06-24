@@ -87,14 +87,17 @@
 <meta property="og:site_name" content="Super Yue">
 <meta property="og:description" content="MotivationOpen fields bring storage overhead which will affect the query efficiency.  Having an automated mechanism to infer and consolidate the schema information for the ingested records without los">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2019/06/19/images/structure.jpg">
-<meta property="og:image" content="http://yoursite.com/2019/06/19/images/example.jpg">
-<meta property="og:image" content="http://yoursite.com/2019/06/19/images/schema.jpg">
-<meta property="og:updated_time" content="2019-06-21T10:44:29.863Z">
+<meta property="og:image" content="http://yoursite.com/images/structure.jpg">
+<meta property="og:image" content="http://yoursite.com/images/example.jpg">
+<meta property="og:image" content="http://yoursite.com/images/schema.jpg">
+<meta property="og:image" content="http://yoursite.com/images/sub1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/sub2.jpg">
+<meta property="og:image" content="http://yoursite.com/images/sub3.jpg">
+<meta property="og:updated_time" content="2019-06-24T03:56:55.119Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Note: Schema for the schemaless">
 <meta name="twitter:description" content="MotivationOpen fields bring storage overhead which will affect the query efficiency.  Having an automated mechanism to infer and consolidate the schema information for the ingested records without los">
-<meta name="twitter:image" content="http://yoursite.com/2019/06/19/images/structure.jpg">
+<meta name="twitter:image" content="http://yoursite.com/images/structure.jpg">
 
 
 
@@ -342,16 +345,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/06/19/Note-Schema-for-the-schemaless/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2019/06/19/Note-Schema-for-the-schemaless/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -391,16 +384,31 @@
 <p>Bigger data blocks, bigger I/O cost</p>
 </li>
 </ol>
-<h2 id="Apache-AsterixDB-Architecture"><a href="#Apache-AsterixDB-Architecture" class="headerlink" title="Apache AsterixDB Architecture"></a>Apache AsterixDB Architecture</h2><p><img src="../images/structure.jpg" width="700"></p>
+<h2 id="Apache-AsterixDB-Architecture"><a href="#Apache-AsterixDB-Architecture" class="headerlink" title="Apache AsterixDB Architecture"></a>Apache AsterixDB Architecture</h2><p><img src="/images/structure.jpg" width="700"></p>
 <h2 id="LSM-Based-Schema-Inference-And-Tuple-Compaction-Framework"><a href="#LSM-Based-Schema-Inference-And-Tuple-Compaction-Framework" class="headerlink" title="LSM-Based Schema Inference And Tuple Compaction Framework"></a>LSM-Based Schema Inference And Tuple Compaction Framework</h2><p><code>Main idea</code> factor out the fields’ metadata from their values for each record and construct the overall schema during the LSM-flush operation.</p>
 <p><code>Tuple Compactor</code> the module that infers the schema and compacts the record</p>
-<h3 id="Framework-Overview"><a href="#Framework-Overview" class="headerlink" title="Framework Overview"></a>Framework Overview</h3><p><img src="../images/example.jpg" width="700"></p>
+<h3 id="Framework-Overview"><a href="#Framework-Overview" class="headerlink" title="Framework Overview"></a>Framework Overview</h3><p><img src="/images/example.jpg" width="700"></p>
 <p>The newly inferred schema is a super-set(or union) of all the previously inferred schemas. </p>
 <p>Given this property, we only need to store the most recent schema of all the mergeable components as it covers the fields of all the previously flushed components.</p>
 <p><code>pros</code> the merge operation does not need to  block the modifications on the in-memory schema while flushing the in-memory </p>
-<h3 id="Schema-Structure"><a href="#Schema-Structure" class="headerlink" title="Schema Structure"></a>Schema Structure</h3><p><img src="../images/schema.jpg" width="700"></p>
-<p>The schema stucture describes the tree structure of the ingester JSON-like records, where the inner nodes of the tree structure of the </p>
-
+<h3 id="Schema-Structure"><a href="#Schema-Structure" class="headerlink" title="Schema Structure"></a>Schema Structure</h3><p><img src="/images/schema.jpg" width="700"></p>
+<p>The schema stucture describes the tree structure of the ingester JSON-like records, where the inner nodes of the tree structure of the tree describes the different </p>
+<h4 id="Schema-Structure-Subcomponents"><a href="#Schema-Structure-Subcomponents" class="headerlink" title="Schema Structure Subcomponents"></a>Schema Structure Subcomponents</h4><ul>
+<li><p>A tree-structured summarizes the ADM structure of the ingested records.</p>
+<p><img src="/images/sub1.jpg" width="700"></p>
+</li>
+<li><p>A dictionary that encodes the field names into IDs</p>
+<p><img src="/images/sub2.jpg" width="700"></p>
+</li>
+<li><p>An Inverted-index that stores the hash-codes of field names and their associated IDs in the dictionary</p>
+<p><img src="/images/sub3.jpg" width="700"></p>
+</li>
+</ul>
+<h4 id="Schema-Structure-Maintenance"><a href="#Schema-Structure-Maintenance" class="headerlink" title="Schema Structure Maintenance"></a>Schema Structure Maintenance</h4><p><code>anti-matter tuple</code> when deleting a tuple, construct an anti-matter tuple and insert it into the in-memory component.</p>
+<p><code>anti-matter schema</code> Exploit the lookup operation of the delete to retrieve the schema of the deleted tuple and include it within the anti-matter tuple.The schema in the anti-matter tuple is anti-matter schema.</p>
+<h3 id="Tuple-Compaction"><a href="#Tuple-Compaction" class="headerlink" title="Tuple Compaction"></a>Tuple Compaction</h3><p>AsterixDB closed type is suitable for fixed schema but not a dynamic one.</p>
+<p>Sparse tuples can incur a storage overhead as the closed type tuples need to maintain a bitmap which indicates whether a filed value is present, null or missing.</p>
+<h4 id="Vector-based-Physical-Data-Format"><a href="#Vector-based-Physical-Data-Format" class="headerlink" title="Vector-based Physical Data Format"></a>Vector-based Physical Data Format</h4><h4 id="Accessing-Values-in-the-Vector-based-Tuples"><a href="#Accessing-Values-in-the-Vector-based-Tuples" class="headerlink" title="Accessing Values in the Vector-based Tuples"></a>Accessing Values in the Vector-based Tuples</h4><h4 id="Compacting-Vector-based-Tuples"><a href="#Compacting-Vector-based-Tuples" class="headerlink" title="Compacting Vector-based Tuples"></a>Compacting Vector-based Tuples</h4>
       
     </div>
     
@@ -546,7 +554,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -579,7 +587,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Motivation"><span class="nav-number">1.</span> <span class="nav-text">Motivation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-AsterixDB-Architecture"><span class="nav-number">2.</span> <span class="nav-text">Apache AsterixDB Architecture</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSM-Based-Schema-Inference-And-Tuple-Compaction-Framework"><span class="nav-number">3.</span> <span class="nav-text">LSM-Based Schema Inference And Tuple Compaction Framework</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Framework-Overview"><span class="nav-number">3.1.</span> <span class="nav-text">Framework Overview</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Schema-Structure"><span class="nav-number">3.2.</span> <span class="nav-text">Schema Structure</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Motivation"><span class="nav-number">1.</span> <span class="nav-text">Motivation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-AsterixDB-Architecture"><span class="nav-number">2.</span> <span class="nav-text">Apache AsterixDB Architecture</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSM-Based-Schema-Inference-And-Tuple-Compaction-Framework"><span class="nav-number">3.</span> <span class="nav-text">LSM-Based Schema Inference And Tuple Compaction Framework</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Framework-Overview"><span class="nav-number">3.1.</span> <span class="nav-text">Framework Overview</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Schema-Structure"><span class="nav-number">3.2.</span> <span class="nav-text">Schema Structure</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Schema-Structure-Subcomponents"><span class="nav-number">3.2.1.</span> <span class="nav-text">Schema Structure Subcomponents</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Schema-Structure-Maintenance"><span class="nav-number">3.2.2.</span> <span class="nav-text">Schema Structure Maintenance</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tuple-Compaction"><span class="nav-number">3.3.</span> <span class="nav-text">Tuple Compaction</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Vector-based-Physical-Data-Format"><span class="nav-number">3.3.1.</span> <span class="nav-text">Vector-based Physical Data Format</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Accessing-Values-in-the-Vector-based-Tuples"><span class="nav-number">3.3.2.</span> <span class="nav-text">Accessing Values in the Vector-based Tuples</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Compacting-Vector-based-Tuples"><span class="nav-number">3.3.3.</span> <span class="nav-text">Compacting Vector-based Tuples</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -800,28 +808,6 @@
 
 
 
-
-  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
-  
-  <script type="text/javascript">
-    var GUEST = ['nick','mail','link'];
-    var guest = 'nick,mail,link';
-    guest = guest.split(',').filter(item=>{
-      return GUEST.indexOf(item)>-1;
-    });
-    new Valine({
-        el: '#comments' ,
-        verify: false,
-        notify: false,
-        appId: '3XR6FljFinmjVC9I3W5GkTGx-gzGzoHsz',
-        appKey: 'RY4wnOrQTf8oReTKJvqSxqrF',
-        placeholder: 'Just go go',
-        avatar:'mm',
-        guest_info:guest,
-        pageSize:'10' || 10,
-    });
-  </script>
 
 
 

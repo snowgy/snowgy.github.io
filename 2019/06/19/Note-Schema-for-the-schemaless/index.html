@@ -91,9 +91,11 @@
 <meta property="og:image" content="http://yoursite.com/images/example.jpg">
 <meta property="og:image" content="http://yoursite.com/images/schema.jpg">
 <meta property="og:image" content="http://yoursite.com/images/sub1.jpg">
-<meta property="og:image" content="http://yoursite.com/images/sub2.jpg">
-<meta property="og:image" content="http://yoursite.com/images/sub3.jpg">
-<meta property="og:updated_time" content="2019-06-24T03:56:55.119Z">
+<meta property="og:image" content="http://yoursite.com/images/sub2.png">
+<meta property="og:image" content="http://yoursite.com/images/sub3.png">
+<meta property="og:image" content="http://yoursite.com/images/vector-based.png">
+<meta property="og:image" content="http://yoursite.com/images/vec_eg.jpg">
+<meta property="og:updated_time" content="2019-06-24T08:59:18.129Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Note: Schema for the schemaless">
 <meta name="twitter:description" content="MotivationOpen fields bring storage overhead which will affect the query efficiency.  Having an automated mechanism to infer and consolidate the schema information for the ingested records without los">
@@ -398,17 +400,19 @@
 <p><img src="/images/sub1.jpg" width="700"></p>
 </li>
 <li><p>A dictionary that encodes the field names into IDs</p>
-<p><img src="/images/sub2.jpg" width="700"></p>
+<p><img src="/images/sub2.png" width="700"></p>
 </li>
 <li><p>An Inverted-index that stores the hash-codes of field names and their associated IDs in the dictionary</p>
-<p><img src="/images/sub3.jpg" width="700"></p>
+<p><img src="/images/sub3.png" width="700"></p>
 </li>
 </ul>
 <h4 id="Schema-Structure-Maintenance"><a href="#Schema-Structure-Maintenance" class="headerlink" title="Schema Structure Maintenance"></a>Schema Structure Maintenance</h4><p><code>anti-matter tuple</code> when deleting a tuple, construct an anti-matter tuple and insert it into the in-memory component.</p>
 <p><code>anti-matter schema</code> Exploit the lookup operation of the delete to retrieve the schema of the deleted tuple and include it within the anti-matter tuple.The schema in the anti-matter tuple is anti-matter schema.</p>
 <h3 id="Tuple-Compaction"><a href="#Tuple-Compaction" class="headerlink" title="Tuple Compaction"></a>Tuple Compaction</h3><p>AsterixDB closed type is suitable for fixed schema but not a dynamic one.</p>
 <p>Sparse tuples can incur a storage overhead as the closed type tuples need to maintain a bitmap which indicates whether a filed value is present, null or missing.</p>
-<h4 id="Vector-based-Physical-Data-Format"><a href="#Vector-based-Physical-Data-Format" class="headerlink" title="Vector-based Physical Data Format"></a>Vector-based Physical Data Format</h4><h4 id="Accessing-Values-in-the-Vector-based-Tuples"><a href="#Accessing-Values-in-the-Vector-based-Tuples" class="headerlink" title="Accessing Values in the Vector-based Tuples"></a>Accessing Values in the Vector-based Tuples</h4><h4 id="Compacting-Vector-based-Tuples"><a href="#Compacting-Vector-based-Tuples" class="headerlink" title="Compacting Vector-based Tuples"></a>Compacting Vector-based Tuples</h4>
+<h4 id="Vector-based-Physical-Data-Format"><a href="#Vector-based-Physical-Data-Format" class="headerlink" title="Vector-based Physical Data Format"></a>Vector-based Physical Data Format</h4><p><img src="/images/vector-based.png" width="700"></p>
+<p><img src="/images/vec_eg.jpg" width="700"></p>
+<h4 id="Accessing-Values-in-the-Vector-based-Tuples"><a href="#Accessing-Values-in-the-Vector-based-Tuples" class="headerlink" title="Accessing Values in the Vector-based Tuples"></a>Accessing Values in the Vector-based Tuples</h4><h4 id="Compacting-Vector-based-Tuples"><a href="#Compacting-Vector-based-Tuples" class="headerlink" title="Compacting Vector-based Tuples"></a>Compacting Vector-based Tuples</h4>
       
     </div>
     

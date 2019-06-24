@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="MotivationOpen fields bring storage overhead which will affect the query efficiency.  Having an automated mechanism to infer and consolidate the schema information for the ingested records without los">
+<meta name="description" content="本文主要讲述了AsterixDB如何做内存压缩，以及压缩后access data的方法和优化。">
 <meta name="keywords" content="paper_notes">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Note: Schema for the schemaless">
 <meta property="og:url" content="http://yoursite.com/2019/06/19/Note-Schema-for-the-schemaless/index.html">
 <meta property="og:site_name" content="Super Yue">
-<meta property="og:description" content="MotivationOpen fields bring storage overhead which will affect the query efficiency.  Having an automated mechanism to infer and consolidate the schema information for the ingested records without los">
+<meta property="og:description" content="本文主要讲述了AsterixDB如何做内存压缩，以及压缩后access data的方法和优化。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/images/structure.jpg">
 <meta property="og:image" content="http://yoursite.com/images/example.jpg">
@@ -96,10 +96,10 @@
 <meta property="og:image" content="http://yoursite.com/images/vector-based.png">
 <meta property="og:image" content="http://yoursite.com/images/vec_eg.png">
 <meta property="og:image" content="http://yoursite.com/images/contraction.png">
-<meta property="og:updated_time" content="2019-06-24T09:22:21.135Z">
+<meta property="og:updated_time" content="2019-06-24T12:43:07.055Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Note: Schema for the schemaless">
-<meta name="twitter:description" content="MotivationOpen fields bring storage overhead which will affect the query efficiency.  Having an automated mechanism to infer and consolidate the schema information for the ingested records without los">
+<meta name="twitter:description" content="本文主要讲述了AsterixDB如何做内存压缩，以及压缩后access data的方法和优化。">
 <meta name="twitter:image" content="http://yoursite.com/images/structure.jpg">
 
 
@@ -377,7 +377,9 @@
       
 
       
-        <h2 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h2><p>Open fields bring storage overhead which will affect the query efficiency.  Having an automated mechanism to infer and consolidate the schema information for the ingested records without losing the flexibility and the experience of the schema-less stores is desirable.</p>
+        <p>本文主要讲述了AsterixDB如何做内存压缩，以及压缩后access data的方法和优化。</p>
+<a id="more"></a>
+<h2 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h2><p>Open fields bring storage overhead which will affect the query efficiency.  Having an automated mechanism to infer and consolidate the schema information for the ingested records without losing the flexibility and the experience of the schema-less stores is desirable.</p>
 <p><code>Question</code>:</p>
 <ol>
 <li><p>Why open fields will bring storage overhead?</p>
@@ -415,7 +417,26 @@
 <p><img src="/images/vec_eg.png" width="700"></p>
 <h4 id="Accessing-Values-in-the-Vector-based-Tuples"><a href="#Accessing-Values-in-the-Vector-based-Tuples" class="headerlink" title="Accessing Values in the Vector-based Tuples"></a>Accessing Values in the Vector-based Tuples</h4><p>Each value in the JSON or ADM document has a unique path that starts from the root. In AsterixDB, a value is accessed by providing the <em>path expression</em> that describes the value’s location.  </p>
 <h4 id="Compacting-Vector-based-Tuples"><a href="#Compacting-Vector-based-Tuples" class="headerlink" title="Compacting Vector-based Tuples"></a>Compacting Vector-based Tuples</h4><p><img src="/images/contraction.png" width="700"></p>
-<h3 id="Query-Processing"><a href="#Query-Processing" class="headerlink" title="Query Processing"></a>Query Processing</h3><h4 id="Handling-Heterogeneous-Schemas"><a href="#Handling-Heterogeneous-Schemas" class="headerlink" title="Handling Heterogeneous Schemas"></a>Handling Heterogeneous Schemas</h4><h4 id="Processing-Compacted-Tuples"><a href="#Processing-Compacted-Tuples" class="headerlink" title="Processing Compacted Tuples"></a>Processing Compacted Tuples</h4>
+<h3 id="Query-Processing"><a href="#Query-Processing" class="headerlink" title="Query Processing"></a>Query Processing</h3><h4 id="Handling-Heterogeneous-Schemas"><a href="#Handling-Heterogeneous-Schemas" class="headerlink" title="Handling Heterogeneous Schemas"></a>Handling Heterogeneous Schemas</h4><ol>
+<li>each of the distributed partition executes the same job. </li>
+<li>No coordination</li>
+</ol>
+<p>Therefore, the schema in each partition can be different from other schemas in other partitions.</p>
+<p><code>Solution 1</code> </p>
+<p>Uncompact each tuple into its original form by including the field names rather than the field name IDs.</p>
+<p><strong>Drawback</strong></p>
+<p>Field name size is relatively large which increases the total tuple size. Larger tuple size means a smaller number of tuples per batch which implies more memory copy operations.</p>
+<p><code>Solution 2</code></p>
+<p>Distribute the schema information of each partition to all nodes in the cluster at the beginning of the query execution.</p>
+<p>Each node receives and caches each partition’s schema information along with its partition ID and serves them to each of its executors.</p>
+<p><strong>To minimize the distribution cost</strong>, we only distribute the schema information when 1) the query plan contains a non-local exchange operator such as <em>hash-partition-exchange</em> and 2)  the resulting tuples, after the non-local exchange connector, contains object fields.</p>
+<h4 id="Processing-Compacted-Tuples"><a href="#Processing-Compacted-Tuples" class="headerlink" title="Processing Compacted Tuples"></a>Processing Compacted Tuples</h4><p>Vector-based format: linear scan</p>
+<p>ADM physical format: logarithmic time</p>
+<p>Thus delay field access expression is somtimes costly for Vector-based format.</p>
+<p><code>solution</code></p>
+<p>Added one rewrite rule to the AsterixDB query optimizer to consolidate field access expressions in the plan into a <strong>single</strong> expresssion.</p>
+<p>We also take the opportunity to <strong>push the consolidated field access expression down through the scan operator and project only the needed values instead of the whole tuple</strong>.</p>
+
       
     </div>
     

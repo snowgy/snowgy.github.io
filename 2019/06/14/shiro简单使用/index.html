@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="之前做的一个项目用到了shiro这个工具。">
+<meta name="description" content="之前做的一个项目用到了shiro这个工具，用它来做权限管理十分方便。本文记录一下它的简单用法。">
 <meta name="keywords" content="develop">
 <meta property="og:type" content="article">
 <meta property="og:title" content="shiro简单使用">
 <meta property="og:url" content="http://yoursite.com/2019/06/14/shiro简单使用/index.html">
 <meta property="og:site_name" content="Super Yue">
-<meta property="og:description" content="之前做的一个项目用到了shiro这个工具。">
+<meta property="og:description" content="之前做的一个项目用到了shiro这个工具，用它来做权限管理十分方便。本文记录一下它的简单用法。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-06-20T08:30:09.148Z">
+<meta property="og:updated_time" content="2019-07-07T21:11:26.266Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="shiro简单使用">
-<meta name="twitter:description" content="之前做的一个项目用到了shiro这个工具。">
+<meta name="twitter:description" content="之前做的一个项目用到了shiro这个工具，用它来做权限管理十分方便。本文记录一下它的简单用法。">
 
 
 
@@ -302,7 +302,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-06-14T15:10:29+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-06-14T15:10:29-07:00">
                 2019-06-14
               </time>
             
@@ -367,8 +367,33 @@
       
 
       
-        <p>之前做的一个项目用到了shiro这个工具。</p>
+        <p>之前做的一个项目用到了shiro这个工具，用它来做权限管理十分方便。本文记录一下它的简单用法。</p>
 <a id="more"></a>
+<h2 id="依赖配置"><a href="#依赖配置" class="headerlink" title="依赖配置"></a>依赖配置</h2><p>首先maven导入shiro依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- shiro --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.shiro<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>shiro-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="添加Shiro配置类"><a href="#添加Shiro配置类" class="headerlink" title="添加Shiro配置类"></a>添加Shiro配置类</h2><p>接下来需要一个config类来进行shiro的各种配置。下面提供一个最精简的配置模板。</p>
+<p>源码戳<a href="https://github.com/snowgy/Cloud-Educational-Administration-System/blob/master/src/main/java/com/cloud/education/realm/ShiroConfig.java" target="_blank" rel="noopener">这里</a></p>
+<h2 id="UserRealm类简介"><a href="#UserRealm类简介" class="headerlink" title="UserRealm类简介"></a>UserRealm类简介</h2><p>之后就需要实现最重要的类<code>UserRealm</code>。这个类提供两个方法，他们的名字非常相似，但是功能完全不同。</p>
+<p>第一个方法是<code>doGetAuthenticationInfo</code>(注意是<strong>Authentication</strong>，中文是<strong>鉴定</strong>)。顾名思义，这个方法的作用是进行登录验证，同时返回登录的信息。该方法在用户登录时调用。</p>
+<p>第二个方法叫做<code>doGetAuthorizationInfo</code>(注意是<strong>Authorization</strong>，中文是<strong>授权</strong>)。顾名思义，这个方法的作用是对用户进行授权，这也是shiro实现权限管理的核心功能。该方法在涉及用户权限的操作时调用。比如subject.hasRole()。</p>
+<h3 id="验证方法"><a href="#验证方法" class="headerlink" title="验证方法"></a>验证方法</h3><p>来看一个<code>doGetAuthenticationInfo</code>的实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> AuthenticationInfo <span class="title">doGetAuthenticationInfo</span><span class="params">(AuthenticationToken authenticationToken)</span> <span class="keyword">throws</span> AuthenticationException </span>&#123;</span><br><span class="line">       <span class="comment">// get username</span></span><br><span class="line">       String userName = (String) authenticationToken.getPrincipal();</span><br><span class="line">       <span class="comment">// get password</span></span><br><span class="line">       String password = <span class="keyword">new</span> String((<span class="keyword">char</span>[])authenticationToken.getCredentials());</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (userName == <span class="keyword">null</span>) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> UnknownAccountException();</span><br><span class="line">       &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!password.equals(user.getPassword()))</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> IncorrectCredentialsException();</span><br><span class="line"></span><br><span class="line">       <span class="comment">// pass authentication information</span></span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">new</span> SimpleAuthenticationInfo(userName, password, getName());;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>在看和它配套的用户登录部分的代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">UsernamePasswordToken token = <span class="keyword">new</span> UsernamePasswordToken(username, password);</span><br><span class="line">    Subject subject = SecurityUtils.getSubject();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        subject.login(token); <span class="comment">// where the doGetAuthenticationInfo is called</span></span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        model.addAttribute(<span class="string">"message"</span>,<span class="string">"Invalid Credential"</span>);</span><br><span class="line">        <span class="comment">// if unsuccessful</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"redirect:/login"</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="授权方法"><a href="#授权方法" class="headerlink" title="授权方法"></a>授权方法</h3><p>来看一个<code>doGetAuthorizationInfo</code>的实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> AuthorizationInfo <span class="title">doGetAuthorizationInfo</span><span class="params">(PrincipalCollection principalCollection)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// get userName</span></span><br><span class="line">        String userName = (String) getAvailablePrincipal(principalCollection);</span><br><span class="line">      	<span class="comment">// find user by name</span></span><br><span class="line">      	User user = userService.findUserByName(userName);</span><br><span class="line">      	<span class="comment">// get the user role</span></span><br><span class="line">        Role role = user.getRole();</span><br><span class="line">        <span class="comment">// get user permissions</span></span><br><span class="line">        SimpleAuthorizationInfo info = <span class="keyword">new</span> SimpleAuthorizationInfo();</span><br><span class="line">        Set&lt;String&gt; roles = <span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line">        <span class="keyword">if</span> (role != <span class="keyword">null</span>) &#123;</span><br><span class="line">            roles.add(role.getName());</span><br><span class="line">            info.setRoles(roles);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> info;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>你可能会好奇principleCollection是从哪里得到的。其实就是我们在<code>authentication</code>里面return的那个信息类。之前我们调用的是</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> SimpleAuthenticationInfo(userName, password, getName());;</span><br></pre></td></tr></table></figure>
+<p>所以这里</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(String) getAvailablePrincipal(principalCollection);</span><br></pre></td></tr></table></figure>
+<p>得到也是<code>username</code>.</p>
+<p>如果我们return一个user对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> SimpleAuthenticationInfo(user, password, getName());;</span><br></pre></td></tr></table></figure>
+<p>那我们就可以用同样的方法get到一个user对象。</p>
+<p>最后看下配套的controller权限管理方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (subject.hasRole(<span class="string">"admin"</span>))</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"redirect:/admin/adminHome"</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (subject.hasRole(<span class="string">"teacher"</span>))</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"redirect:/teacher/teacherHome"</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (subject.hasRole(<span class="string">"student"</span>))</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"redirect:/student/studentHome"</span>;</span><br></pre></td></tr></table></figure>
+<p>当我们调用<code>subject.hasRole</code>时，<code>doGetAuthorizationInfo</code> 将被调用，返回用户的权限信息。</p>
+
       
     </div>
     
@@ -465,8 +490,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -528,6 +562,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖配置"><span class="nav-number">1.</span> <span class="nav-text">依赖配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加Shiro配置类"><span class="nav-number">2.</span> <span class="nav-text">添加Shiro配置类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UserRealm类简介"><span class="nav-number">3.</span> <span class="nav-text">UserRealm类简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#验证方法"><span class="nav-number">3.1.</span> <span class="nav-text">验证方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#授权方法"><span class="nav-number">3.2.</span> <span class="nav-text">授权方法</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

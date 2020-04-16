@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="我回来了！最近开始了在腾讯广告的实习生活，也算是完成了本科时的一个心愿。 第一周熟悉环境，熟悉代码，做了一些零零散散的小需求。这周终于开始负责一些比较独立的需求了。每天都要经历接任务-&amp;gt;coding-&amp;gt;merge request-&amp;gt;code review-&amp;gt;approve-&amp;gt;merged的过程，感觉压力还是挺大的。自己以前写代码感觉比较像是野蛮生长，功能实现了就完事了">
+<meta name="description" content="我回来了！最近开始了在腾讯广告的实习生活，也算是完成了本科一定要经历一次开发实习的心愿。">
 <meta name="keywords" content="intern">
 <meta property="og:type" content="article">
 <meta property="og:title" content="实习小记-和时间戳死磕的一天">
 <meta property="og:url" content="http://yoursite.com/2020/04/14/实习小记-1/index.html">
 <meta property="og:site_name" content="Super Yue">
-<meta property="og:description" content="我回来了！最近开始了在腾讯广告的实习生活，也算是完成了本科时的一个心愿。 第一周熟悉环境，熟悉代码，做了一些零零散散的小需求。这周终于开始负责一些比较独立的需求了。每天都要经历接任务-&amp;gt;coding-&amp;gt;merge request-&amp;gt;code review-&amp;gt;approve-&amp;gt;merged的过程，感觉压力还是挺大的。自己以前写代码感觉比较像是野蛮生长，功能实现了就完事了">
+<meta property="og:description" content="我回来了！最近开始了在腾讯广告的实习生活，也算是完成了本科一定要经历一次开发实习的心愿。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-04-16T03:10:04.454Z">
+<meta property="og:updated_time" content="2020-04-16T03:15:04.174Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="实习小记-和时间戳死磕的一天">
-<meta name="twitter:description" content="我回来了！最近开始了在腾讯广告的实习生活，也算是完成了本科时的一个心愿。 第一周熟悉环境，熟悉代码，做了一些零零散散的小需求。这周终于开始负责一些比较独立的需求了。每天都要经历接任务-&amp;gt;coding-&amp;gt;merge request-&amp;gt;code review-&amp;gt;approve-&amp;gt;merged的过程，感觉压力还是挺大的。自己以前写代码感觉比较像是野蛮生长，功能实现了就完事了">
+<meta name="twitter:description" content="我回来了！最近开始了在腾讯广告的实习生活，也算是完成了本科一定要经历一次开发实习的心愿。">
 
 
 
@@ -345,7 +345,8 @@
       
 
       
-        <p>我回来了！最近开始了在腾讯广告的实习生活，也算是完成了本科时的一个心愿。</p>
+        <p>我回来了！最近开始了在腾讯广告的实习生活，也算是完成了本科一定要经历一次开发实习的心愿。</p>
+<a id="more"></a>
 <p>第一周熟悉环境，熟悉代码，做了一些零零散散的小需求。这周终于开始负责一些比较独立的需求了。每天都要经历接任务-&gt;coding-&gt;merge request-&gt;code review-&gt;approve-&gt;merged的过程，感觉压力还是挺大的。自己以前写代码感觉比较像是野蛮生长，功能实现了就完事了。但是在公司写代码，每一行都要小心翼翼，很怕被喷或者出糗。还有一点感受就是把细节处理好其实是很难的事情。再小的需求也有很多细节需要去注意。所以在博客里开个坑，记录一下实习期间遇到的一些问题和感受~</p>
 <h2 id="Gorm读取timeStamp类型"><a href="#Gorm读取timeStamp类型" class="headerlink" title="Gorm读取timeStamp类型"></a>Gorm读取timeStamp类型</h2><p>gorm是一个go的orm框架。在使用他读取timeStamp的时候，可以直接使用time.Time</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> DagRun <span class="keyword">struct</span> &#123;</span><br><span class="line">	Id            	<span class="keyword">int</span> 	<span class="string">`gorm:"column:id"`</span></span><br><span class="line">	ExecutionDate 	time.Time	<span class="string">`gorm:"column:execution_date"`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -399,8 +400,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/09/11/My-10-weeks-in-UCI/" rel="next" title="My 10 weeks in UCI">
-                <i class="fa fa-chevron-left"></i> My 10 weeks in UCI
+              <a href="/2019/09/11/My-10-weeks-in-UCI/" rel="next" title="My 10 weeks at UCI">
+                <i class="fa fa-chevron-left"></i> My 10 weeks at UCI
               </a>
             
           </div>

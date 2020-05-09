@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="diary,">
+  <meta name="keywords" content="Hexo, NexT">
 
 
 
@@ -79,18 +79,17 @@
 
 
 
-<meta name="description" content="Random thoughts and records for week 2 at UCI.">
-<meta name="keywords" content="diary">
+<meta name="description" content="最近写后端的业务逻辑，经常踩GORM的各种坑。这篇文章目的是梳理下GORM中的关联处理（association），以及自己踩过的一些坑。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Week 2 at UCI">
-<meta property="og:url" content="http://yoursite.com/2019/07/15/week-2-in-UCI/index.html">
+<meta property="og:title" content="实习小记 - GORM的关联处理">
+<meta property="og:url" content="http://yoursite.com/2020/04/27/实习小记-2-1/index.html">
 <meta property="og:site_name" content="Super Yue">
-<meta property="og:description" content="Random thoughts and records for week 2 at UCI.">
+<meta property="og:description" content="最近写后端的业务逻辑，经常踩GORM的各种坑。这篇文章目的是梳理下GORM中的关联处理（association），以及自己踩过的一些坑。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-04-16T03:16:25.473Z">
+<meta property="og:updated_time" content="2020-04-27T08:47:57.360Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Week 2 at UCI">
-<meta name="twitter:description" content="Random thoughts and records for week 2 at UCI.">
+<meta name="twitter:title" content="实习小记 - GORM的关联处理">
+<meta name="twitter:description" content="最近写后端的业务逻辑，经常踩GORM的各种坑。这篇文章目的是梳理下GORM中的关联处理（association），以及自己踩过的一些坑。">
 
 
 
@@ -120,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/07/15/week-2-in-UCI/">
+  <link rel="canonical" href="http://yoursite.com/2020/04/27/实习小记-2-1/">
 
 
 
 
 
-  <title>Week 2 at UCI | Super Yue</title>
+  <title>实习小记 - GORM的关联处理 | Super Yue</title>
   
 
 
@@ -273,7 +272,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/15/week-2-in-UCI/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/27/实习小记-2-1/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Yvette Gong">
@@ -290,7 +289,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Week 2 at UCI</h1>
+          <h1 class="post-title" itemprop="name headline">实习小记 - GORM的关联处理</h1>
         
 
         <div class="post-meta">
@@ -302,8 +301,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-07-15T01:03:49+08:00">
-                2019-07-15
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-04-27T15:24:16+08:00">
+                2020-04-27
               </time>
             
 
@@ -345,12 +344,14 @@
       
 
       
-        <p>Random thoughts and records for week 2 at UCI.</p>
+        <p>最近写后端的业务逻辑，经常踩GORM的各种坑。这篇文章目的是梳理下GORM中的关联处理（association），以及自己踩过的一些坑。</p>
 <a id="more"></a>
-<p>Life falls into routine in week 2. Begin working at 9:30 approximately and come back to dorm at 21:30 or later. I didn’t cook much this week, which just made my life far more easier.</p>
-<p>I begin to get familiar with lots of things here: the deep blue sky and the warm bright sunshine, the way to school and albertson, restaurants and food (I just cannot control my love to in N out !!!). And don’t forget one more thing —— the code base. This is the biggest code base I have ever seen. To be honest, I haven’t imagined that I could actually make modification to it one day. Fortunately, my great mentor gave me a good pivot to start. In this week, I did my first coding task. Not that difficult, not that relevant, but the moment to see the result is absolutely encouraging.</p>
-<p>I love the style my mentor supervises me. When he gave me a task, he always told that you could try to solve it but I don’t expect you can work it out. He never gives me the pressure that I must finish something. All I have to do is to try my best to think about it. Besides, he nerver reserves encouraging words even if I just ask something or do something which is extraneous in my view.</p>
-<p>I always imagine living in a world with no expectation. It is a place where I can live the way I am. </p>
+<h2 id="Belongs-to"><a href="#Belongs-to" class="headerlink" title="Belongs to"></a>Belongs to</h2><p><code>belongs to</code>是一种one-to-one connection。</p>
+<p>例子，一个用户profile属于一个用户。默认的外键是结构体的名字+主键的名字</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">  gorm.Model</span><br><span class="line">  Name <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Profile <span class="keyword">struct</span> &#123;</span><br><span class="line">  gorm.Model</span><br><span class="line">  UserID <span class="keyword">int</span> <span class="comment">// default foreign key</span></span><br><span class="line">  User User</span><br><span class="line">  Name <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 也可以手动指定foreign key</span></span><br><span class="line"><span class="keyword">type</span> Profile <span class="keyword">struct</span> &#123;</span><br><span class="line">  gorm.Model</span><br><span class="line">  UserRefer <span class="keyword">uint</span></span><br><span class="line">  User User <span class="string">`gorm:"foreignkey:UserRefer"`</span></span><br><span class="line">  Name <span class="keyword">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Association-ForeignKey"><a href="#Association-ForeignKey" class="headerlink" title="Association ForeignKey"></a>Association ForeignKey</h3><p>默认情况下，gorm会用owner的主键作为外键的值。但是也可以通过<code>association_foreignkey</code>来指定外键的值</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">  gorm.Model</span><br><span class="line">  Refer <span class="keyword">string</span></span><br><span class="line">  Name <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Profile <span class="keyword">struct</span> &#123;</span><br><span class="line">  gorm.Model</span><br><span class="line">  Name      <span class="keyword">string</span></span><br><span class="line">  User      User <span class="string">`gorm:"association_foreignkey:Refer"`</span> <span class="comment">// use Refer as association foreign key</span></span><br><span class="line">  UserRefer <span class="keyword">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.Model(&amp;user).Related(&amp;profile) <span class="comment">// user一般是外面传进来的参数，profile是用来接收的对象</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -366,12 +367,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/diary/" rel="tag"># diary</a>
-          
-        </div>
-      
 
       
       
@@ -381,8 +376,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/07/09/WeeK-1-UCI/" rel="next" title="Week 1 at UCI">
-                <i class="fa fa-chevron-left"></i> Week 1 at UCI
+              <a href="/2020/04/16/实习小记-2/" rel="next" title="实习小记-Context究竟是个啥">
+                <i class="fa fa-chevron-left"></i> 实习小记-Context究竟是个啥
               </a>
             
           </div>
@@ -390,10 +385,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/08/21/Week-x-in-UCI/" rel="prev" title="From An Experiment Hater to Lover">
-                From An Experiment Hater to Lover <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -448,8 +439,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -521,6 +521,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Belongs-to"><span class="nav-number">1.</span> <span class="nav-text">Belongs to</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Association-ForeignKey"><span class="nav-number">1.1.</span> <span class="nav-text">Association ForeignKey</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Usage"><span class="nav-number">1.2.</span> <span class="nav-text">Usage</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

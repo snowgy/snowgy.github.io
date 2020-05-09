@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Super Yue">
 <meta property="og:description" content="我回来了！最近开始了在腾讯广告的实习生活，也算是完成了本科一定要经历一次开发实习的心愿。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-04-16T03:15:04.174Z">
+<meta property="og:updated_time" content="2020-04-17T03:28:39.958Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="实习小记-和时间戳死磕的一天">
 <meta name="twitter:description" content="我回来了！最近开始了在腾讯广告的实习生活，也算是完成了本科一定要经历一次开发实习的心愿。">
@@ -370,6 +370,7 @@
 <h2 id="关于go-mysql-driver的一个bug"><a href="#关于go-mysql-driver的一个bug" class="headerlink" title="关于go-mysql-driver的一个bug"></a>关于go-mysql-driver的一个bug</h2><p>当数据库的时区和程序时区不统一时，使用go-mysql-driver读取timestamp会出现一个很有趣的bug。</p>
 <p>比如我们读取<code>2020-04-14 07:46:10.778901</code>这样一个时间，在数据库中时区是UTC。当我们读到程序中时，你会发现这个时间变成了<code>2020-04-14 15:46:10.778901</code>。乍一看没有什么问题，就是我们前面提到的时区转换。但是当你格式化输出一下这个时间，你会发现他的完整版是<code>2020-04-14 15:46:10.778901 +0000 UTC</code>。也就是说，虽然时间换算了，但是时区还是数据库default的时区。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>说了这么多，最重要的经验就是<strong>一定要统一数据库时区和程序时区呀！！！不然会出现很多棘手的麻烦</strong>。</p>
+<p>可以参照这篇文章解决 <a href="https://studygolang.com/articles/17313" target="_blank" rel="noopener">https://studygolang.com/articles/17313</a></p>
 
       
     </div>
@@ -409,6 +410,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/16/实习小记-2/" rel="prev" title="实习小记-Context究竟是个啥">
+                实习小记-Context究竟是个啥 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -490,7 +495,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
